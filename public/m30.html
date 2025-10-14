@@ -1,0 +1,2999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPOT AND BOOK - Location Booking Platform</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #4f46e5;
+            --accent-color: #ec4899;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --success-color: #10b981;
+            --info-color: #3b82f6;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+        }
+        
+        body {
+            background-color: #f1f5f9;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--dark-color);
+            overflow-x: hidden;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 7rem 0;
+            border-radius: 0 0 40px 40px;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+        
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('images/hero-bg.jpg') center/cover;
+            opacity: 0.15;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            border-radius: 50px;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .form-control {
+            border-radius: 15px;
+            border: 1px solid #e2e8f0;
+            padding: 0.8rem 1.2rem;
+            transition: all 0.3s ease;
+            background-color: #f8fafc;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.2);
+            background-color: white;
+        }
+        
+        .dashboard-card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+            background: white;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dashboard-card .card-body {
+            padding: 2rem;
+        }
+        
+        .dashboard-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+        
+        .dashboard-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('images/dashboard-bg.jpg') center/cover;   
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .dashboard-header-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--dark-color);
+            font-weight: 600;
+            border: none;
+            border-radius: 15px 15px 0 0;
+            padding: 1rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background-color: white;
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .feature-card {
+            text-align: center;
+            padding: 2.5rem;
+            border-radius: 20px;
+            height: 100%;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+        }
+        
+        .auth-card {
+            max-width: 500px;
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .validation-error {
+            color: var(--danger-color);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .input-group-text {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .password-strength {
+            height: 5px;
+            border-radius: 5px;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .strength-weak {
+            background-color: var(--danger-color);
+            width: 33%;
+        }
+        
+        .strength-medium {
+            background-color: var(--warning-color);
+            width: 66%;
+        }
+        
+        .strength-strong {
+            background-color: var(--success-color);
+            width: 100%;
+        }
+        
+        .password-requirements {
+            background-color: #f8fafc;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+        
+        .requirement i {
+            margin-right: 0.5rem;
+            font-size: 0.875rem;
+        }
+        
+        .requirement.valid {
+            color: var(--success-color);
+        }
+        
+        .requirement.invalid {
+            color: var(--danger-color);
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active .step-circle {
+            background-color: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .step.completed .step-circle {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .step-line {
+            position: absolute;
+            top: 25px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #e2e8f0;
+            z-index: 0;
+        }
+        
+        .form-section {
+            background-color: #f8fafc;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--primary-color);
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .form-section:hover {
+            background-color: #f1f5f9;
+            transform: translateX(5px);
+        }
+        
+        .section-title {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .success-message {
+            background-color: #d1fae5;
+            color: #065f46;
+            padding: 1.2rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 5px solid var(--success-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .location-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .location-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .location-card:hover::before {
+            background-color: var(--accent-color);
+            width: 8px;
+        }
+        
+        .location-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .location-image {
+            height: 180px;
+            object-fit: cover;
+            width: 100%;
+        }
+        
+        .location-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--primary-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .rating {
+            color: #fbbf24;
+        }
+        
+        .booking-status {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-confirmed {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-cancelled {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+        
+        .verification-alert {
+            background-color: #dbeafe;
+            border-left: 5px solid #3b82f6;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .location-suggestion {
+            cursor: pointer;
+            padding: 1rem;
+            border-radius: 10px;
+            transition: all 0.2s;
+            margin-bottom: 0.5rem;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .location-suggestion:hover {
+            background-color: #f1f5f9;
+            transform: translateX(5px);
+        }
+        
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 3rem 0;
+            margin-top: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('images/hero-bg.jpg') center/cover;
+            opacity: 0.05;
+            z-index: 0;
+        }
+        
+        .footer-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .balance-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .balance-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+        
+        .balance-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .balance-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .dashboard-menu {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-item:hover {
+            background-color: #f1f5f9;
+            transform: translateX(5px);
+        }
+        
+        .menu-item.active {
+            background-color: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .menu-item i {
+            margin-right: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stats-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        .booking-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .booking-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .review-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .review-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .email-simulation {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .verification-code {
+            font-family: monospace;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            letter-spacing: 0.3rem;
+            background-color: #e2e8f0;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 1rem 0;
+        }
+        
+        .code-input {
+            font-family: monospace;
+            font-size: 1.5rem;
+            letter-spacing: 0.3rem;
+            text-align: center;
+            border-radius: 10px;
+        }
+        
+        .home-features {
+            padding: 4rem 0;
+        }
+        
+        .auth-card {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid #e2e8f0;
+            border-radius: 20px 20px 0 0;
+            padding: 1.5rem;
+            background-color: #f8fafc;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid #e2e8f0;
+            border-radius: 0 0 20px 20px;
+            padding: 1.5rem;
+            background-color: #f8fafc;
+        }
+        
+        .btn-outline-primary {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 50px;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        .btn-danger {
+            border-radius: 50px;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-3px);
+        }
+        
+        .btn-success {
+            border-radius: 50px;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-3px);
+        }
+        
+        .btn-warning {
+            border-radius: 50px;
+            padding: 0.8rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-warning:hover {
+            transform: translateY(-3px);
+        }
+        
+        .location-input-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .location-input-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .location-input-header h3 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .location-input-header p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+        
+        .location-input-group {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .location-suggestions {
+            max-width: 500px;
+            margin: 1.5rem auto 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .dashboard-section {
+            margin-bottom: 3rem;
+        }
+        
+        .dashboard-section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .dashboard-section-title i {
+            margin-right: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state h4 {
+            color: #475569;
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-state p {
+            color: #64748b;
+        }
+        
+        .no-book {
+            display: none;
+        }
+        
+        .user-only {
+            display: none;
+        }
+        
+        .user-only.show {
+            display: inline-block;
+        }
+        
+        .category-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            height: 100%;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .category-image {
+            height: 150px;
+            object-fit: cover;
+            width: 100%;
+        }
+        
+        .category-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: var(--primary-color);
+            padding: 0.4rem 0.8rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container hero-content">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">SPOT AND BOOK</h1>
+                    <p class="lead mb-4">Discover and book amazing locations and services near you</p>
+                    <div class="d-flex gap-3">
+                        <button class="btn btn-light btn-lg" id="homeLoginBtn">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                        </button>
+                        <button class="btn btn-outline-light btn-lg" id="homeSignupBtn">
+                            <i class="bi bi-person-plus me-2"></i>Sign Up
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" placeholder="Search for locations or services..." id="heroSearch">
+                        <button class="btn btn-light btn-lg" type="button">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Home Page Content -->
+    <div id="homePage" class="container mb-5">
+        <!-- Features Section -->
+        <div class="home-features">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="card-body">
+                            <i class="bi bi-geo-alt feature-icon"></i>
+                            <h4>Find Locations</h4>
+                            <p>Discover amazing locations and services near you with our easy-to-use search.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="card-body">
+                            <i class="bi bi-calendar-check feature-icon"></i>
+                            <h4>Book Instantly</h4>
+                            <p>Reserve your spot with just a few clicks. No waiting, no hassle.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-card">
+                        <div class="card-body">
+                            <i class="bi bi-star feature-icon"></i>
+                            <h4>Rate & Review</h4>
+                            <p>Share your experience and help others make informed decisions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="text-center py-5">
+            <h2 class="mb-4">Ready to Get Started?</h2>
+            <p class="lead mb-4">Join thousands of users who are already discovering and booking amazing locations.</p>
+        </div>
+    </div>
+
+    <!-- Auth Section -->
+    <div id="authSection" class="container mb-5 hidden">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="card auth-card">
+                    <div class="card-body p-4">
+                        <!-- Auth Tabs -->
+                        <ul class="nav nav-tabs nav-justified mb-4" id="authTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button">Login</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button">Sign Up</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="admin-signup-tab" data-bs-toggle="tab" data-bs-target="#admin-signup" type="button">Admin</button>
+                            </li> 
+
+                        </ul>
+                        
+                        <div class="tab-content" id="authTabContent">
+                            <!-- Login Tab -->
+                            <div class="tab-pane fade show active" id="login" role="tabpanel">
+                                <h4 class="text-center mb-4">Login to Your Account</h4>
+                                
+                                <div id="loginAlert" class="alert alert-danger hidden" role="alert">
+                                    Invalid email or password. Please try again.
+                                </div>
+                                
+                                <form id="loginForm">
+                                    <div class="mb-3">
+                                        <label for="loginEmail" class="form-label">Email Address</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                            <input type="email" class="form-control" id="loginEmail" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="loginPassword" class="form-label">Password</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                            <input type="password" class="form-control" id="loginPassword" required>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="userRole" class="form-label">Login As</label>
+                                        <select class="form-select" id="userRole" required>
+                                            <option value="">Select Role</option>
+                                            <option value="user">User</option>
+                                            <option value="owner">Owner</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
+                                    </div>
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary">Login</button>
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <a href="#" id="forgotPasswordLink">Forgot Password?</a>
+                                    </div>
+                                </form>
+                            </div>
+                            
+                            <!-- Sign Up Tab -->
+                            <div class="tab-pane fade" id="signup" role="tabpanel">
+                                <h4 class="text-center mb-4">Create Your Account</h4>
+                                
+                                <div id="signupAlert" class="alert alert-success hidden" role="alert">
+                                    Account created successfully! Please check your email for verification.
+                                </div>
+                                
+                                <form id="signupForm">
+                                    <div class="mb-3">
+                                        <label for="signupUsername" class="form-label">Username</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                            <input type="text" class="form-control" id="signupUsername" required>
+                                        </div>
+                                        <div id="usernameError" class="validation-error"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="signupEmail" class="form-label">Email Address</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                            <input type="email" class="form-control" id="signupEmail" required>
+                                        </div>
+                                        <div id="emailError" class="validation-error"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="signupMobile" class="form-label">Mobile Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-phone"></i></span>
+                                            <input type="tel" class="form-control" id="signupMobile" placeholder="1234567890" required>
+                                        </div>
+                                        <div id="mobileError" class="validation-error"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="signupPassword" class="form-label">Password</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                            <input type="password" class="form-control" id="signupPassword" required>
+                                        </div>
+                                        <div id="passwordError" class="validation-error"></div>
+                                        <div class="password-strength" id="passwordStrength"></div>
+                                        <div class="password-requirements">
+                                            <div class="requirement" id="length-req">
+                                                <i class="bi bi-circle"></i> At least 8 characters
+                                            </div>
+                                            <div class="requirement" id="uppercase-req">
+                                                <i class="bi bi-circle"></i> At least 1 uppercase letter
+                                            </div>
+                                            <div class="requirement" id="lowercase-req">
+                                                <i class="bi bi-circle"></i> At least 1 lowercase letter
+                                            </div>
+                                            <div class="requirement" id="number-req">
+                                                <i class="bi bi-circle"></i> At least 1 number
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="signupConfirmPassword" class="form-label">Confirm Password</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                            <input type="password" class="form-control" id="signupConfirmPassword" required>
+                                        </div>
+                                        <div id="confirmPasswordError" class="validation-error"></div>
+                                    </div>
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary">Create Account</button>
+                                    </div>
+                                </form>
+                            </div>
+                        <div class="tab-pane fade" id="admin-signup" role="tabpanel">
+    <h4 class="text-center mb-4">Create Admin Account</h4>
+    
+    <div id="adminSignupAlert" class="alert alert-success hidden" role="alert">
+        Admin account created successfully!
+    </div>
+    
+    <form id="adminSignupForm">
+        <div class="mb-3">
+            <label for="adminUsername" class="form-label">Username</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-person"></i></span>
+                <input type="text" class="form-control" id="adminUsername" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="adminEmail" class="form-label">Email</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                <input type="email" class="form-control" id="adminEmail" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="adminMobile" class="form-label">Mobile</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-phone"></i></span>
+                <input type="tel" class="form-control" id="adminMobile" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="adminPassword" class="form-label">Password</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                <input type="password" class="form-control" id="adminPassword" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="adminSecret" class="form-label">Admin Secret Key</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-key"></i></span>
+                <input type="password" class="form-control" id="adminSecret" required>
+            </div>
+            <small class="text-muted">Enter the admin secret key from server</small>
+        </div>
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Create Admin Account</button>
+        </div>
+    </form>
+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Verification Section -->
+    <div id="verificationSection" class="container mb-5 hidden">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <h2 class="text-center mb-4">Verify Your Email</h2>
+                
+                <div class="email-simulation">
+                    <h5><i class="bi bi-envelope-check me-2"></i>Email Sent (Simulation)</h5>
+                    <p>We've sent a verification email to <strong id="verificationEmail"></strong>. In a real application, this email would contain a verification link or code.</p>
+                    
+                    <div class="mt-3">
+                        <p>For this demo, your verification code is:</p>
+                        <div class="verification-code" id="displayVerificationCode">123456</div>
+                    </div>
+                    
+                    <p class="mt-3 text-muted">In a real application, this code would be sent to your email address.</p>
+                </div>
+                
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5>Enter Verification Code</h5>
+                        <p>Please enter the 6-digit verification code shown above to verify your account.</p>
+                        
+                        <div class="mb-3">
+                            <label for="verificationCodeInput" class="form-label">Verification Code</label>
+                            <input type="text" class="form-control code-input" id="verificationCodeInput" maxlength="6" placeholder="123456" required>
+                        </div>
+                        
+                        <div id="verificationError" class="alert alert-danger hidden" role="alert">
+                            Invalid verification code. Please try again.
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary" id="verifyCodeBtn">Verify Account</button>
+                        </div>
+                        
+                        <p class="text-center mt-3">
+                            Didn't receive the code? <a href="#" id="resendVerification">Resend verification code</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Location Selection Section -->
+    <div id="locationSection" class="container mb-5 hidden">
+        <div class="location-input-section">
+            <div class="location-input-header">
+                <h3><i class="bi bi-geo-alt me-2"></i>Select Your Location</h3>
+                <p>Tell us where you are to find the best locations near you</p>
+            </div>
+            
+            <div class="location-input-group">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-lg" id="locationInput" placeholder="e.g., New York, London, Tokyo">
+                    <button class="btn btn-primary btn-lg" type="button" id="useCurrentLocation">
+                        <i class="bi bi-geo-alt"></i> Use Current Location
+                    </button>
+                </div>
+                <div id="locationSuggestions" class="location-suggestions"></div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <button class="btn btn-primary btn-lg" id="confirmLocation">
+                    <i class="bi bi-check-circle me-2"></i>Continue to Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboardSection" class="hidden">
+        <!-- Admin Dashboard -->
+        <div id="adminDashboard" class="hidden">
+            <div class="dashboard-header">
+                <div class="dashboard-header-content">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1>Admin Dashboard</h1>
+                            <p class="lead mb-0">Manage categories, subcategories, owners, and locations</p>
+                        </div>
+                        <div>
+                            <span class="me-3">Welcome, <span id="adminName"></span></span>
+                            <button class="btn btn-light btn-sm" id="adminLogout">
+                                <i class="bi bi-box-arrow-right me-1"></i>Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="dashboard-menu">
+                            <div class="menu-item active" data-section="places">
+                                <i class="bi bi-geo-alt"></i>
+                                <span>View Places</span>
+                            </div>
+                            <div class="menu-item" data-section="addall">
+                                <i class="bi bi-plus-circle"></i>
+                                <span>Add All</span>
+                            </div>
+                            <div class="menu-item" data-section="balance">
+                                <i class="bi bi-wallet2"></i>
+                                <span>View Balance</span>
+                            </div>
+                            <div class="menu-item" id="adminLogoutMenu">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Logout</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-9">
+                        <!-- View Places Section -->
+                        <div id="adminPlacesSection" class="dashboard-section">
+                            <h2 class="section-title">
+                                <i class="bi bi-geo-alt me-2"></i>Places
+                            </h2>
+                            
+                            <div class="row" id="adminCategoriesList">
+                                <!-- Categories will be populated here -->
+                            </div>
+                            
+                            <div class="row hidden" id="adminPlacesList">
+                                <!-- Places will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Add All Section -->
+                        <div id="adminAddAllSection" class="dashboard-section hidden">
+                            <h2 class="section-title">
+                                <i class="bi bi-plus-circle me-2"></i>Add Category, Subcategory, Owner, and Location
+                            </h2>
+                            
+                            <div class="card">
+                                <div class="card-body">
+                                    <div id="addAllSuccess" class="success-message hidden">
+                                        <i class="bi bi-check-circle-fill me-2"></i>
+                                        All entities have been successfully added to the system!
+                                    </div>
+                                    
+                                    <form id="addAllForm">
+                                        <!-- Step Indicator -->
+                                        <div class="step-indicator">
+                                            <div class="step-line"></div>
+                                            <div class="step active">
+                                                <div class="step-circle">1</div>
+                                                <div>Category</div>
+                                            </div>
+                                            <div class="step">
+                                                <div class="step-circle">2</div>
+                                                <div>Subcategory</div>
+                                            </div>
+                                            <div class="step">
+                                                <div class="step-circle">3</div>
+                                                <div>Owner</div>
+                                            </div>
+                                            <div class="step">
+                                                <div class="step-circle">4</div>
+                                                <div>Location</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Category Section -->
+                                        <div class="form-section">
+                                            <h5 class="section-title"><i class="bi bi-tag me-2"></i>Category Information</h5>
+                                            <div class="mb-3">
+                                                <label for="addAllCategoryName" class="form-label">Category Name</label>
+                                                <input type="text" class="form-control" id="addAllCategoryName" placeholder="e.g., Restaurant, Gym, Spa" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Subcategory Section -->
+                                        <div class="form-section">
+                                            <h5 class="section-title"><i class="bi bi-tags me-2"></i>Subcategory Information</h5>
+                                            <div class="mb-3">
+                                                <label for="addAllSubcategoryName" class="form-label">Subcategory Name</label>
+                                                <input type="text" class="form-control" id="addAllSubcategoryName" placeholder="e.g., Italian, Chinese, GymA, GymB" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Owner Section -->
+                                        <div class="form-section">
+                                            <h5 class="section-title"><i class="bi bi-person me-2"></i>Owner Information</h5>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="addAllOwnerName" class="form-label">Owner Name</label>
+                                                    <input type="text" class="form-control" id="addAllOwnerName" placeholder="Owner's full name" required>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="addAllOwnerEmail" class="form-label">Email</label>
+                                                    <input type="email" class="form-control" id="addAllOwnerEmail" placeholder="owner@example.com" required>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="addAllOwnerPhone" class="form-label">Phone</label>
+                                                <input type="tel" class="form-control" id="addAllOwnerPhone" placeholder="555-1234" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Location Section -->
+                                        <div class="form-section">
+                                            <h5 class="section-title"><i class="bi bi-geo-alt me-2"></i>Location Information</h5>
+                                            <div class="mb-3">
+                                                <label for="addAllLocationName" class="form-label">Location Name</label>
+                                                <input type="text" class="form-control" id="addAllLocationName" placeholder="e.g., Bella Italia, FitZone Gym" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="addAllLocationAddress" class="form-label">Address</label>
+                                                <textarea class="form-control" id="addAllLocationAddress" rows="2" placeholder="Full street address" required></textarea>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="addAllLocationCity" class="form-label">City</label>
+                                                <input type="text" class="form-control" id="addAllLocationCity" placeholder="e.g., New York, London" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" class="btn btn-primary btn-lg">
+                                                <i class="bi bi-plus-circle me-2"></i>Add All Entities
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- View Balance Section -->
+                        <div id="adminBalanceSection" class="dashboard-section hidden">
+                            <h2 class="section-title">
+                                <i class="bi bi-wallet2 me-2"></i>Balance
+                            </h2>
+                            
+                            <div class="balance-card">
+                                <div class="balance-amount" id="adminBalanceAmount">$0.00</div>
+                                <div class="balance-label">Current Balance</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Owner Dashboard -->
+        <div id="ownerDashboard" class="hidden">
+            <div class="dashboard-header">
+                <div class="dashboard-header-content">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1>Owner Dashboard</h1>
+                            <p class="lead mb-0">Manage your locations and view booking status</p>
+                        </div>
+                        <div>
+                            <span class="me-3">Welcome, <span id="ownerName"></span></span>
+                            <button class="btn btn-light btn-sm" id="ownerLogout">
+                                <i class="bi bi-box-arrow-right me-1"></i>Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="dashboard-menu">
+                            <div class="menu-item active" data-section="bookings">
+                                <i class="bi bi-calendar-check"></i>
+                                <span>View Bookings</span>
+                            </div>
+                            <div class="menu-item" data-section="places">
+                                <i class="bi bi-geo-alt"></i>
+                                <span>View Places</span>
+                            </div>
+                            <div class="menu-item" data-section="balance">
+                                <i class="bi bi-wallet2"></i>
+                                <span>View Balance</span>
+                            </div>
+                            <div class="menu-item" id="ownerLogoutMenu">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Logout</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-9">
+                        <!-- View Bookings Section -->
+                        <div id="ownerBookingsSection" class="dashboard-section">
+                            <h2 class="section-title">
+                                <i class="bi bi-calendar-check me-2"></i>Bookings
+                            </h2>
+                            
+                            <div class="row" id="ownerBookingsList">
+                                <!-- Bookings will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- View Places Section -->
+                        <div id="ownerPlacesSection" class="dashboard-section hidden">
+                            <h2 class="section-title">
+                                <i class="bi bi-geo-alt me-2"></i>Places
+                            </h2>
+                            
+                            <div class="row" id="ownerCategoriesList">
+                                <!-- Categories will be populated here -->
+                            </div>
+                            
+                            <div class="row hidden" id="ownerPlacesList">
+                                <!-- Places will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- View Balance Section -->
+                        <div id="ownerBalanceSection" class="dashboard-section hidden">
+                            <h2 class="section-title">
+                                <i class="bi bi-wallet2 me-2"></i>Balance
+                            </h2>
+                            
+                            <div class="balance-card">
+                                <div class="balance-amount" id="ownerBalanceAmount">$0.00</div>
+                                <div class="balance-label">Current Balance</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- User Dashboard -->
+        <div id="userDashboard" class="hidden">
+            <div class="dashboard-header">
+                <div class="dashboard-header-content">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h1>User Dashboard</h1>
+                            <p class="lead mb-0">Discover and book amazing locations near you</p>
+                        </div>
+                        <div>
+                            <span class="me-3">Welcome, <span id="userName"></span></span>
+                            <button class="btn btn-light btn-sm" id="userLogout">
+                                <i class="bi bi-box-arrow-right me-1"></i>Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="dashboard-menu">
+                            <div class="menu-item active" data-section="places">
+                                <i class="bi bi-geo-alt"></i>
+                                <span>View Places</span>
+                            </div>
+                            <div class="menu-item" data-section="book">
+                                <i class="bi bi-calendar-plus"></i>
+                                <span>Book Places</span>
+                            </div>
+                            <div class="menu-item" data-section="past-bookings">
+                                <i class="bi bi-clock-history"></i>
+                                <span>Past Bookings</span>
+                            </div>
+                            <div class="menu-item" data-section="past-reviews">
+                                <i class="bi bi-star"></i>
+                                <span>Past Reviews</span>
+                            </div>
+                            <div class="menu-item" data-section="balance">
+                                <i class="bi bi-wallet2"></i>
+                                <span>View Balance</span>
+                            </div>
+                            <div class="menu-item" id="userLogoutMenu">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Logout</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-9">
+                        <!-- View Places Section -->
+                        <div id="userPlacesSection" class="dashboard-section">
+                            <h2 class="section-title">
+                                <i class="bi bi-geo-alt me-2"></i>Places Near <span id="userLocation"></span>
+                            </h2>
+                            
+                            <div class="row" id="userCategoriesList">
+                                <!-- Categories will be populated here -->
+                            </div>
+                            
+                            <div class="row hidden" id="userPlacesList">
+                                <!-- Places will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Book Places Section -->
+                        <div id="userBookSection" class="dashboard-section hidden">
+                            <h2 class="section-title">
+                                <i class="bi bi-calendar-plus me-2"></i>Book a Place
+                            </h2>
+                            
+                            <div class="location-input-section">
+                                <div class="location-input-header">
+                                    <h5>Find Places Near You</h5>
+                                    <p>Enter your location to discover amazing places nearby</p>
+                                </div>
+                                
+                                <div class="location-input-group">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="userLocationInput" placeholder="e.g., New York, London, Tokyo">
+                                        <button class="btn btn-primary" type="button" id="userUseCurrentLocation">
+                                            <i class="bi bi-geo-alt"></i> Use Current Location
+                                        </button>
+                                    </div>
+                                    <div id="userLocationSuggestions" class="location-suggestions"></div>
+                                </div>
+                                
+                                <div class="text-center mt-4">
+                                    <button class="btn btn-primary" id="findUserPlaces">
+                                        <i class="bi bi-search me-2"></i>Find Places
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4" id="userBookPlacesList">
+                                <!-- Places will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Past Bookings Section -->
+                        <div id="userPastBookingsSection" class="dashboard-section hidden">
+                            <h2 class="section-title">
+                                <i class="bi bi-clock-history me-2"></i>Past Bookings
+                            </h2>
+                            
+                            <div class="row" id="userPastBookingsList">
+                                <!-- Past bookings will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- Past Reviews Section -->
+                        <div id="userPastReviewsSection" class="dashboard-section hidden">
+                            <h2 class="section-title">
+                                <i class="bi bi-star me-2"></i>Past Reviews
+                            </h2>
+                            
+                            <div class="row" id="userPastReviewsList">
+                                <!-- Past reviews will be populated here -->
+                            </div>
+                        </div>
+                        
+                        <!-- View Balance Section -->
+                        <div id="userBalanceSection" class="dashboard-section hidden">
+                            <h2 class="section-title">
+                                <i class="bi bi-wallet2 me-2"></i>Balance
+                            </h2>
+                            
+                            <div class="balance-card">
+                                <div class="balance-amount" id="userBalanceAmount">$0.00</div>
+                                <div class="balance-label">Current Balance</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Location Details Modal -->
+    <div class="modal fade" id="locationDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLocationName">Location Name</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="https://images.unsplash.com/photo-1557682257-2f9c37a3a5f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="img-fluid rounded mb-3" alt="Location Image">
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Details</h5>
+                            <p><strong>Category:</strong> <span id="modalLocationCategory"></span></p>
+                            <p><strong>Subcategory:</strong> <span id="modalLocationSubcategory"></span></p>
+                            <p><strong>Owner:</strong> <span id="modalLocationOwner"></span></p>
+                            <p><strong>Address:</strong> <span id="modalLocationAddress"></span></p>
+                            <p><strong>City:</strong> <span id="modalLocationCity"></span></p>
+                            
+                            <h5 class="mt-4">Rating</h5>
+                            <div class="rating mb-3">
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-half"></i>
+                                <span>(4.5/5)</span>
+                            </div>
+                            
+                            <h5>Reviews</h5>
+                            <div id="locationReviews">
+                                <!-- Reviews will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary book-location-btn user-only" id="bookLocationBtn">Book Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Booking Modal -->
+    <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Book Location</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bookingForm">
+                        <div class="mb-3">
+                            <label for="bookingDate" class="form-label">Booking Date</label>
+                            <input type="date" class="form-control" id="bookingDate" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookingTime" class="form-label">Booking Time</label>
+                            <input type="time" class="form-control" id="bookingTime" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookingDuration" class="form-label">Duration (hours)</label>
+                            <input type="number" class="form-control" id="bookingDuration" min="1" value="1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bookingNotes" class="form-label">Special Requests</label>
+                            <textarea class="form-control" id="bookingNotes" rows="2"></textarea>
+                        </div>
+                        <input type="hidden" id="bookingLocationId">
+                   </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmBookingBtn">Confirm Booking</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Review Modal -->
+    <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Write a Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="reviewForm">
+                        <div class="mb-3">
+                            <label class="form-label">Rating</label>
+                            <div class="rating-input">
+                                <i class="bi bi-star rating-star" data-rating="1"></i>
+                                <i class="bi bi-star rating-star" data-rating="2"></i>
+                                <i class="bi bi-star rating-star" data-rating="3"></i>
+                                <i class="bi bi-star rating-star" data-rating="4"></i>
+                                <i class="bi bi-star rating-star" data-rating="5"></i>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reviewTitle" class="form-label">Review Title</label>
+                            <input type="text" class="form-control" id="reviewTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reviewComment" class="form-label">Your Review</label>
+                            <textarea class="form-control" id="reviewComment" rows="3" required></textarea>
+                        </div>
+                        <input type="hidden" id="reviewLocationId">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="submitReviewBtn">Submit Review</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>SPOT AND BOOK</h5>
+                    <p>Discover and book amazing locations and services near you with ease.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Home</a></li>
+                        <li><a href="#" class="text-white">About Us</a></li>
+                        <li><a href="#" class="text-white">Contact</a></li>
+                        <li><a href="#" class="text-white">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <p><i class="bi bi-envelope me-2"></i> info@spotandbook.com</p>
+                    <p><i class="bi bi-telephone me-2"></i> +1 (555) 123-4567</p>
+                    <p><i class="bi bi-geo-alt me-2"></i> 123 Booking Street, City, Country</p>
+                </div>
+            </div>
+            <hr class="bg-white">
+            <div class="text-center">
+                <p>&copy; 2023 SPOT AND BOOK. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialize data
+            let currentUser = null;
+            let selectedLocation = null;
+            let selectedRating = 0;
+            let currentVerificationCode = null;
+            let currentCategory = null;
+            
+            // Sample data
+           let categories = [
+    { id: 1, name: "Gym", image: "images/gym-category.jpg" },
+    { id: 2, name: "Restaurant", image: "images/restaurant-category.jpg" },
+    { id: 3, name: "Spa", image: "images/spa-category.jpg" }
+];
+            
+            let subcategories = [
+                { id: 1, name: "GymA", categoryId: 1 },
+                { id: 2, name: "GymB", categoryId: 1 },
+                { id: 3, name: "Italian", categoryId: 2 },
+                { id: 4, name: "Chinese", categoryId: 2 },
+                { id: 5, name: "Massage", categoryId: 3 },
+                { id: 6, name: "Facial", categoryId: 3 }
+            ];
+            
+            let owners = [
+                { id: 1, name: "John Smith", email: "john@example.com", phone: "555-1234" },
+                { id: 2, name: "Sarah Johnson", email: "sarah@example.com", phone: "555-5678" },
+                { id: 3, name: "Mike Wilson", email: "mike@example.com", phone: "555-9012" }
+            ];
+            
+            let locations = [
+                { id: 1, name: "FitZone Gym", ownerId: 1, categoryId: 1, subcategoryId: 1, address: "123 Fitness St", city: "New York" },
+                { id: 2, name: "PowerHouse Gym", ownerId: 1, categoryId: 1, subcategoryId: 2, address: "456 Strength Ave", city: "New York" },
+                { id: 3, name: "Bella Italia", ownerId: 2, categoryId: 2, subcategoryId: 3, address: "789 Pasta Blvd", city: "New York" },
+                { id: 4, name: "Dragon Palace", ownerId: 2, categoryId: 2, subcategoryId: 4, address: "101 Noodle Rd", city: "New York" },
+                { id: 5, name: "Relax Spa", ownerId: 3, categoryId: 3, subcategoryId: 5, address: "202 Calm Ln", city: "New York" },
+                { id: 6, name: "Beauty Haven", ownerId: 3, categoryId: 3, subcategoryId: 6, address: "303 Glow St", city: "New York" }
+            ];
+            
+            let bookings = [
+                { id: 1, locationId: 1, userId: 1, date: "2023-06-15", time: "10:00", duration: 2, status: "confirmed" },
+                { id: 2, locationId: 3, userId: 1, date: "2023-06-20", time: "19:00", duration: 1, status: "pending" },
+                { id: 3, locationId: 5, userId: 2, date: "2023-06-18", time: "14:00", duration: 3, status: "confirmed" }
+            ];
+            
+            let reviews = [
+                { id: 1, locationId: 1, userId: 1, rating: 4, title: "Great equipment", comment: "The gym has all the latest equipment and is very clean." },
+                { id: 2, locationId: 3, userId: 2, rating: 5, title: "Amazing food", comment: "Best Italian food I've had in a long time!" },
+                { id: 3, locationId: 5, userId: 1, rating: 3, title: "Good but expensive", comment: "Nice service but a bit pricey for what you get." }
+            ];
+
+            /*
+            let users = [
+                { id: 1, name: "Alex Johnson", email: "alex@example.com", password: "password123", role: "user", verified: true, balance: 150.00 },
+                { id: 2, name: "Admin User", email: "admin@example.com", password: "admin123", role: "admin", verified: true, balance: 5000.00 },
+                { id: 3, name: "Owner User", email: "owner@example.com", password: "owner123", role: "owner", verified: true, balance: 2500.00 }
+            ]; */
+            
+            // Navigation
+            $("#homeLoginBtn").click(function() {
+                showAuthSection();
+                $("#login-tab").click();
+            });
+            
+            $("#homeSignupBtn").click(function() {
+                showAuthSection();
+                $("#signup-tab").click();
+            });
+            
+            $("#forgotPasswordLink").click(function(e) {
+                e.preventDefault();
+                alert("Password reset functionality would be implemented here in a real application.");
+            });
+            
+            // Show home page
+            function showHomePage() {
+                $("#homePage").removeClass("hidden");
+                $("#authSection").addClass("hidden");
+                $("#verificationSection").addClass("hidden");
+                $("#locationSection").addClass("hidden");
+                $("#dashboardSection").addClass("hidden");
+            }
+            
+            // Show auth section
+            function showAuthSection() {
+                $("#homePage").addClass("hidden");
+                $("#authSection").removeClass("hidden");
+                $("#verificationSection").addClass("hidden");
+                $("#locationSection").addClass("hidden");
+                $("#dashboardSection").addClass("hidden");
+            }
+            
+            // Show section
+            function showSection(section) {
+                // Hide all sections
+                $("#homePage").addClass("hidden");
+                $("#authSection").addClass("hidden");
+                $("#verificationSection").addClass("hidden");
+                $("#locationSection").addClass("hidden");
+                $("#dashboardSection").addClass("hidden");
+                
+                // Show selected section
+                switch(section) {
+                    case "verification":
+                        $("#verificationSection").removeClass("hidden");
+                        break;
+                    case "location":
+                        $("#locationSection").removeClass("hidden");
+                        break;
+                    case "dashboard":
+                        $("#dashboardSection").removeClass("hidden");
+                        break;
+                    default:
+                        showHomePage();
+                        break;
+                }
+            }
+            
+            // Validation functions
+            function validateUsername(username) {
+                // Username should be 3-20 characters, alphanumeric and underscores only
+                const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+                return usernameRegex.test(username);
+            }
+            
+            function validateEmail(email) {
+                // Basic email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+            
+            function validateMobile(mobile) {
+                // Mobile should be 10 digits
+                const mobileRegex = /^\d{10}$/;
+                return mobileRegex.test(mobile);
+            }
+            
+            function validatePassword(password) {
+                // Password should be at least 8 characters
+                return password.length >= 8;
+            }
+            
+            function checkPasswordStrength(password) {
+                let strength = 0;
+                
+                // Length check
+                if (password.length >= 8) strength += 1;
+                
+                // Contains lowercase
+                if (/[a-z]/.test(password)) strength += 1;
+                
+                // Contains uppercase
+                if (/[A-Z]/.test(password)) strength += 1;
+                
+                // Contains number
+                if (/\d/.test(password)) strength += 1;
+                
+                // Contains special character
+                if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+                
+                return strength;
+            }
+            
+            // Generate random verification code
+            function generateVerificationCode() {
+                return Math.floor(100000 + Math.random() * 900000).toString();
+            }
+            
+            // Real-time validation
+            $("#signupUsername").on("input", function() {
+                const username = $(this).val();
+                const isValid = validateUsername(username);
+                
+                if (username.length > 0) {
+                    if (isValid) {
+                        $("#usernameError").text("");
+                    } else {
+                        $("#usernameError").text("Username must be 3-20 characters, alphanumeric and underscores only.");
+                    }
+                } else {
+                    $("#usernameError").text("");
+                }
+            });
+            
+            $("#signupEmail").on("input", function() {
+                const email = $(this).val();
+                const isValid = validateEmail(email);
+                
+                if (email.length > 0) {
+                    if (isValid) {
+                        $("#emailError").text("");
+                    } else {
+                        $("#emailError").text("Please enter a valid email address.");
+                    }
+                } else {
+                    $("#emailError").text("");
+                }
+            });
+            
+            $("#signupMobile").on("input", function() {
+                const mobile = $(this).val();
+                const isValid = validateMobile(mobile);
+                
+                if (mobile.length > 0) {
+                    if (isValid) {
+                        $("#mobileError").text("");
+                    } else {
+                        $("#mobileError").text("Mobile number must be 10 digits.");
+                    }
+                } else {
+                    $("#mobileError").text("");
+                }
+            });
+            
+            $("#signupPassword").on("input", function() {
+                const password = $(this).val();
+                const strength = checkPasswordStrength(password);
+                
+                // Update password strength indicator
+                const $strengthIndicator = $("#passwordStrength");
+                $strengthIndicator.removeClass("strength-weak strength-medium strength-strong");
+                
+                // Update requirement indicators
+                const $lengthReq = $("#length-req");
+                const $uppercaseReq = $("#uppercase-req");
+                const $lowercaseReq = $("#lowercase-req");
+                const $numberReq = $("#number-req");
+                
+                // Reset all requirements
+                $lengthReq.removeClass("valid").addClass("invalid");
+                $lengthReq.find("i").removeClass("bi-check-circle-fill").addClass("bi-circle");
+                
+                $uppercaseReq.removeClass("valid").addClass("invalid");
+                $uppercaseReq.find("i").removeClass("bi-check-circle-fill").addClass("bi-circle");
+                
+                $lowercaseReq.removeClass("valid").addClass("invalid");
+                $lowercaseReq.find("i").removeClass("bi-check-circle-fill").addClass("bi-circle");
+                
+                $numberReq.removeClass("valid").addClass("invalid");
+                $numberReq.find("i").removeClass("bi-check-circle-fill").addClass("bi-circle");
+                
+                if (password.length === 0) {
+                    $strengthIndicator.css("width", "0");
+                    $("#passwordError").text("");
+                } else {
+                    // Check length requirement
+                    if (password.length >= 8) {
+                        $lengthReq.removeClass("invalid").addClass("valid");
+                        $lengthReq.find("i").removeClass("bi-circle").addClass("bi-check-circle-fill");
+                    }
+                    
+                    // Check uppercase requirement
+                    if (/[A-Z]/.test(password)) {
+                        $uppercaseReq.removeClass("invalid").addClass("valid");
+                        $uppercaseReq.find("i").removeClass("bi-circle").addClass("bi-check-circle-fill");
+                    }
+                    
+                    // Check lowercase requirement
+                    if (/[a-z]/.test(password)) {
+                        $lowercaseReq.removeClass("invalid").addClass("valid");
+                        $lowercaseReq.find("i").removeClass("bi-circle").addClass("bi-check-circle-fill");
+                    }
+                    
+                    // Check number requirement
+                    if (/\d/.test(password)) {
+                        $numberReq.removeClass("invalid").addClass("valid");
+                        $numberReq.find("i").removeClass("bi-circle").addClass("bi-check-circle-fill");
+                    }
+                    
+                    // Update strength indicator
+                    if (strength <= 2) {
+                        $strengthIndicator.addClass("strength-weak");
+                        $("#passwordError").text("Password is weak. Try adding uppercase, numbers, and special characters.");
+                    } else if (strength <= 3) {
+                        $strengthIndicator.addClass("strength-medium");
+                        $("#passwordError").text("Password is medium strength. Add more complexity for better security.");
+                    } else {
+                        $strengthIndicator.addClass("strength-strong");
+                        $("#passwordError").text("");
+                    }
+                }
+            });
+            
+            $("#signupConfirmPassword").on("input", function() {
+                const password = $("#signupPassword").val();
+                const confirmPassword = $(this).val();
+                
+                if (confirmPassword.length > 0) {
+                    if (password === confirmPassword) {
+                        $("#confirmPasswordError").text("");
+                    } else {
+                        $("#confirmPasswordError").text("Passwords do not match.");
+                    }
+                } else {
+                    $("#confirmPasswordError").text("");
+                }
+            });
+            
+            // Sign up form
+            // Sign up form
+$("#signupForm").submit(async function(e) {
+    e.preventDefault();
+    
+    const userData = {
+        username: $("#signupUsername").val(),
+        email: $("#signupEmail").val(),
+        mobile: $("#signupMobile").val(),
+        password: $("#signupPassword").val()
+    };
+    
+    try {
+        const response = await fetch('http://localhost:5000/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            // Skip verification, go directly to login
+            $("#signupAlert").text('Registration successful! Please login.').removeClass("hidden");
+            
+            // Switch to login tab after 2 seconds
+            setTimeout(() => {
+                $("#login-tab").click();
+            }, 2000);
+        } else {
+            alert(data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Registration failed. Please make sure the server is running.');
+    }
+});
+
+            
+            // Verify code button
+            $("#verifyCodeBtn").click(function() {
+                const enteredCode = $("#verificationCodeInput").val();
+                
+                if (enteredCode === currentVerificationCode) {
+                    // Find user and mark as verified
+                    const email = $("#verificationEmail").text();
+                    const user = users.find(u => u.email === email);
+                    
+                    if (user) {
+                        user.verified = true;
+                        currentUser = user;
+                        showSection("location");
+                    }
+                } else {
+                    $("#verificationError").removeClass("hidden");
+                }
+            });
+            
+            // Resend verification
+            $("#resendVerification").click(function(e) {
+                e.preventDefault();
+                // Generate new verification code
+                currentVerificationCode = generateVerificationCode();
+                $("#displayVerificationCode").text(currentVerificationCode);
+                
+                // Clear any error messages
+                $("#verificationError").addClass("hidden");
+                
+                alert("A new verification code has been generated. Please use the code shown above.");
+            });
+            
+            // Login form
+            $("#loginForm").submit(async function(e) {
+    e.preventDefault();
+    
+    const loginData = {
+        email: $("#loginEmail").val(),
+        password: $("#loginPassword").val(),
+        role: $("#userRole").val()
+    };
+    
+    try {
+        const response = await fetch('http://localhost:5000/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(loginData)
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            // Store token
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+            
+            currentUser = data.user;
+            
+            // Redirect based on role
+            if (data.user.role === 'admin') {
+                loadAdminDashboard();
+            } else if (data.user.role === 'owner') {
+                loadOwnerDashboard();
+            } else {
+                showSection("location");
+            }
+        } else {
+            $("#loginAlert").removeClass("hidden");
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Login failed. Please try again.');
+    }
+});
+            
+            // Location input
+            $("#locationInput").on("input", function() {
+                const input = $(this).val().toLowerCase();
+                const suggestions = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"];
+                
+                const filtered = suggestions.filter(city => city.toLowerCase().includes(input));
+                
+                let html = "";
+                filtered.forEach(city => {
+                    html += `<div class="location-suggestion" data-city="${city}">${city}</div>`;
+                });
+                
+                $("#locationSuggestions").html(html);
+            });
+            
+            // Location suggestion click
+            $(document).on("click", ".location-suggestion", function() {
+                const city = $(this).data("city");
+                $("#locationInput").val(city);
+                $("#locationSuggestions").html("");
+            });
+            
+            // Use current location
+            $("#useCurrentLocation").click(function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        // In a real app, this would convert coordinates to city name
+                        $("#locationInput").val("Current Location");
+                    });
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
+            });
+            
+            // Confirm location
+            $("#confirmLocation").click(function() {
+                const location = $("#locationInput").val();
+                if (location) {
+                    currentUser.location = location;
+                    loadUserDashboard();
+                }
+            });
+            
+            // Load admin dashboard
+            function loadAdminDashboard() {
+                $("#adminName").text(currentUser.name);
+                $("#adminDashboard").removeClass("hidden");
+                $("#ownerDashboard").addClass("hidden");
+                $("#userDashboard").addClass("hidden");
+                showSection("dashboard");
+                
+                // Load admin categories
+                loadAdminCategories();
+                
+                // Load admin balance
+                loadAdminBalance();
+            }
+            
+            // Load admin categories
+            function loadAdminCategories() {
+                let html = "";
+                categories.forEach(category => {
+                    html += `
+                        <div class="col-md-4 mb-4">
+                            <div class="card category-card" data-id="${category.id}">
+                                <div class="position-relative">
+                                    <img src="${category.image}" class="card-img-top category-image" alt="${category.name}">
+                                    <span class="location-badge">${category.name}</span>
+                                </div>
+                                <div class="card-body">
+                                    <h5>${category.name}</h5>
+                                    <button class="btn btn-sm btn-primary view-category" data-id="${category.id}">View Places</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                $("#adminCategoriesList").html(html);
+                $("#adminPlacesList").addClass("hidden");
+            }
+            
+            // Load admin places by category
+            function loadAdminPlacesByCategory(categoryId) {
+                const category = categories.find(c => c.id === categoryId);
+                const categoryLocations = locations.filter(loc => loc.categoryId === categoryId);
+                
+                let html = "";
+                categoryLocations.forEach(loc => {
+                    const owner = owners.find(o => o.id === loc.ownerId);
+                    const subcategory = subcategories.find(s => s.id === loc.subcategoryId);
+                    
+                    html += `
+                        <div class="col-md-4 mb-4">
+                            <div class="card location-card" data-id="${loc.id}">
+                                <div class="position-relative">
+                                    <img src="images/location-default.jpg" class="card-img-top location-image" alt="${loc.name}">                         
+                                    <span class="location-badge">${subcategory ? subcategory.name : "Unknown"}</span>
+                                </div>
+                                <div class="card-body">
+                                    <h5>${loc.name}</h5>
+                                    <p class="text-muted">${owner ? owner.name : "Unknown"}</p>
+                                    <p><i class="bi bi-geo-alt me-2"></i>${loc.address}, ${loc.city}</p>
+                                    <button class="btn btn-sm btn-primary view-location" data-id="${loc.id}">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                $("#adminPlacesList").html(html);
+                $("#adminCategoriesList").addClass("hidden");
+                $("#adminPlacesList").removeClass("hidden");
+                
+                currentCategory = categoryId;
+            }
+            
+            // Load admin balance
+            function loadAdminBalance() {
+                $("#adminBalanceAmount").text("$" + currentUser.balance.toFixed(2));
+            }
+            
+            // Load owner dashboard
+            function loadOwnerDashboard() {
+                $("#ownerName").text(currentUser.name);
+                $("#adminDashboard").addClass("hidden");
+                $("#ownerDashboard").removeClass("hidden");
+                $("#userDashboard").addClass("hidden");
+                showSection("dashboard");
+                
+                // Load owner bookings
+                loadOwnerBookings();
+                
+                // Load owner categories
+                loadOwnerCategories();
+                
+                // Load owner balance
+                loadOwnerBalance();
+            }
+            
+            // Load owner bookings
+            function loadOwnerBookings() {
+                // Get owner's locations
+                const ownerLocations = locations.filter(loc => loc.ownerId === currentUser.id);
+                const ownerLocationIds = ownerLocations.map(loc => loc.id);
+                
+                // Get bookings for owner's locations
+                const ownerBookings = bookings.filter(booking => ownerLocationIds.includes(booking.locationId));
+                
+                let html = "";
+                if (ownerBookings.length === 0) {
+                    html = `
+                        <div class="col-12">
+                            <div class="empty-state">
+                                <i class="bi bi-calendar-x"></i>
+                                <h4>No Bookings Found</h4>
+                                <p>You don't have any bookings for your locations yet.</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    ownerBookings.forEach(booking => {
+                        const location = locations.find(loc => loc.id === booking.locationId);
+                        const user = users.find(u => u.id === booking.userId);
+                        
+                        html += `
+                            <div class="col-md-6 mb-4">
+                                <div class="booking-card">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <h5>${location ? location.name : "Unknown Location"}</h5>
+                                            <p class="text-muted mb-0">Booked by: ${user ? user.name : "Unknown User"}</p>
+                                        </div>
+                                        <span class="booking-status status-${booking.status}">${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}</span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><i class="bi bi-calendar me-2"></i> ${booking.date}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><i class="bi bi-clock me-2"></i> ${booking.time}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><i class="bi bi-hourglass-split me-2"></i> ${booking.duration} hour${booking.duration !== 1 ? 's' : ''}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                $("#ownerBookingsList").html(html);
+            }
+            
+            // Load owner categories
+            function loadOwnerCategories() {
+                // Get owner's locations
+                const ownerLocations = locations.filter(loc => loc.ownerId === currentUser.id);
+                const ownerCategoryIds = [...new Set(ownerLocations.map(loc => loc.categoryId))];
+                
+                let html = "";
+                ownerCategoryIds.forEach(categoryId => {
+                    const category = categories.find(c => c.id === categoryId);
+                    
+                    html += `
+                        <div class="col-md-4 mb-4">
+                            <div class="card category-card" data-id="${category.id}">
+                                <div class="position-relative">
+                                    <img src="${category.image}" class="card-img-top category-image" alt="${category.name}">
+                                    <span class="location-badge">${category.name}</span>
+                                </div>
+                                <div class="card-body">
+                                    <h5>${category.name}</h5>
+                                    <button class="btn btn-sm btn-primary view-category" data-id="${category.id}">View Places</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                $("#ownerCategoriesList").html(html);
+                $("#ownerPlacesList").addClass("hidden");
+            }
+            
+            // Load owner places by category
+            function loadOwnerPlacesByCategory(categoryId) {
+                const category = categories.find(c => c.id === categoryId);
+                const categoryLocations = locations.filter(loc => loc.categoryId === categoryId && loc.ownerId === currentUser.id);
+                
+                let html = "";
+                categoryLocations.forEach(loc => {
+                    const owner = owners.find(o => o.id === loc.ownerId);
+                    const subcategory = subcategories.find(s => s.id === loc.subcategoryId);
+                    
+                    html += `
+                        <div class="col-md-4 mb-4">
+                            <div class="card location-card" data-id="${loc.id}">
+                                <div class="position-relative">
+                                    <img src="https://images.unsplash.com/photo-1557682257-2f9c37a3a5f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top location-image" alt="${loc.name}">
+                                    <span class="location-badge">${subcategory ? subcategory.name : "Unknown"}</span>
+                                </div>
+                                <div class="card-body">
+                                    <h5>${loc.name}</h5>
+                                    <p><i class="bi bi-geo-alt me-2"></i>${loc.address}, ${loc.city}</p>
+                                    <button class="btn btn-sm btn-primary view-location" data-id="${loc.id}">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                $("#ownerPlacesList").html(html);
+                $("#ownerCategoriesList").addClass("hidden");
+                $("#ownerPlacesList").removeClass("hidden");
+                
+                currentCategory = categoryId;
+            }
+            
+            // Load owner balance
+            function loadOwnerBalance() {
+                $("#ownerBalanceAmount").text("$" + currentUser.balance.toFixed(2));
+            }
+            
+            // Load user dashboard
+            function loadUserDashboard() {
+                $("#adminDashboard").addClass("hidden");
+                $("#ownerDashboard").addClass("hidden");
+                $("#userDashboard").removeClass("hidden");
+                showSection("dashboard");
+                
+                // Set user location
+                $("#userLocation").text(currentUser.location || "Your Location");
+                
+                // Load user categories
+                loadUserCategories();
+                
+                // Load user balance
+                loadUserBalance();
+                
+                // Show user-only elements
+                $(".user-only").addClass("show");
+            }
+            
+            // Load user categories
+            function loadUserCategories() {
+                let html = "";
+                categories.forEach(category => {
+                    html += `
+                        <div class="col-md-4 mb-4">
+                            <div class="card category-card" data-id="${category.id}">
+                                <div class="position-relative">
+                                    <img src="${category.image}" class="card-img-top category-image" alt="${category.name}">
+                                    <span class="location-badge">${category.name}</span>
+                                </div>
+                                <div class="card-body">
+                                    <h5>${category.name}</h5>
+                                    <button class="btn btn-sm btn-primary view-category" data-id="${category.id}">View Places</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                $("#userCategoriesList").html(html);
+                $("#userPlacesList").addClass("hidden");
+            }
+            
+            // Load user places by category
+            function loadUserPlacesByCategory(categoryId) {
+                const category = categories.find(c => c.id === categoryId);
+                const categoryLocations = locations.filter(loc => loc.categoryId === categoryId);
+                
+                let html = "";
+                categoryLocations.forEach(loc => {
+                    const owner = owners.find(o => o.id === loc.ownerId);
+                    const subcategory = subcategories.find(s => s.id === loc.subcategoryId);
+                    
+                    html += `
+                        <div class="col-md-4 mb-4">
+                            <div class="card location-card" data-id="${loc.id}">
+                                <div class="position-relative">
+                                    <img src="https://images.unsplash.com/photo-1557682257-2f9c37a3a5f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top location-image" alt="${loc.name}">
+                                    <span class="location-badge">${subcategory ? subcategory.name : "Unknown"}</span>
+                                </div>
+                                <div class="card-body">
+                                    <h5>${loc.name}</h5>
+                                    <p class="text-muted">${owner ? owner.name : "Unknown"}</p>
+                                    <p><i class="bi bi-geo-alt me-2"></i>${loc.address}, ${loc.city}</p>
+                                    <button class="btn btn-sm btn-primary view-location" data-id="${loc.id}">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                $("#userPlacesList").html(html);
+                $("#userCategoriesList").addClass("hidden");
+                $("#userPlacesList").removeClass("hidden");
+                
+                currentCategory = categoryId;
+            }
+            
+            // Load user balance
+            function loadUserBalance() {
+                $("#userBalanceAmount").text("$" + currentUser.balance.toFixed(2));
+            }
+            
+            // User location input
+            $("#userLocationInput").on("input", function() {
+                const input = $(this).val().toLowerCase();
+                const suggestions = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"];
+                
+                const filtered = suggestions.filter(city => city.toLowerCase().includes(input));
+                
+                let html = "";
+                filtered.forEach(city => {
+                    html += `<div class="location-suggestion" data-city="${city}">${city}</div>`;
+                });
+                
+                $("#userLocationSuggestions").html(html);
+            });
+            
+            // User location suggestion click
+            $(document).on("click", "#userLocationSuggestions .location-suggestion", function() {
+                const city = $(this).data("city");
+                $("#userLocationInput").val(city);
+                $("#userLocationSuggestions").html("");
+            });
+            
+            // Use current location for user
+            $("#userUseCurrentLocation").click(function() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        // In a real app, this would convert coordinates to city name
+                        $("#userLocationInput").val("Current Location");
+                    });
+                } else {
+                    alert("Geolocation is not supported by this browser.");
+                }
+            });
+            
+            // Find user places
+            $("#findUserPlaces").click(function() {
+                const location = $("#userLocationInput").val();
+                if (location) {
+                    currentUser.location = location;
+                    $("#userLocation").text(location);
+                    
+                    // Load places for the user
+                    let html = "";
+                    locations.forEach(loc => {
+                        const owner = owners.find(o => o.id === loc.ownerId);
+                        const category = categories.find(c => c.id === loc.categoryId);
+                        
+                        html += `
+                            <div class="col-md-4 mb-4">
+                                <div class="card location-card" data-id="${loc.id}">
+                                    <div class="position-relative">
+                                        <img src="https://images.unsplash.com/photo-1557682257-2f9c37a3a5f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top location-image" alt="${loc.name}">
+                                        <span class="location-badge">${category ? category.name : "Unknown"}</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5>${loc.name}</h5>
+                                        <p class="text-muted">${owner ? owner.name : "Unknown"}</p>
+                                        <p><i class="bi bi-geo-alt me-2"></i>${loc.address}, ${loc.city}</p>
+                                        <button class="btn btn-sm btn-primary view-location" data-id="${loc.id}">View Details</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    $("#userBookPlacesList").html(html);
+                }
+            });
+            
+            // View category
+            $(document).on("click", ".view-category", function() {
+                const categoryId = $(this).data("id");
+                
+                if ($("#adminDashboard").is(":visible")) {
+                    loadAdminPlacesByCategory(categoryId);
+                } else if ($("#ownerDashboard").is(":visible")) {
+                    loadOwnerPlacesByCategory(categoryId);
+                } else if ($("#userDashboard").is(":visible")) {
+                    loadUserPlacesByCategory(categoryId);
+                }
+            });
+            
+            // View location details
+            $(document).on("click", ".view-location", function() {
+                const locationId = $(this).data("id");
+                const location = locations.find(loc => loc.id === locationId);
+                
+                if (location) {
+                    const owner = owners.find(o => o.id === location.ownerId);
+                    const category = categories.find(c => c.id === location.categoryId);
+                    const subcategory = subcategories.find(s => s.id === location.subcategoryId);
+                    
+                    // Populate modal with location details
+                    $("#modalLocationName").text(location.name);
+                    $("#modalLocationCategory").text(category ? category.name : "Unknown");
+                    $("#modalLocationSubcategory").text(subcategory ? subcategory.name : "Unknown");
+                    $("#modalLocationOwner").text(owner ? owner.name : "Unknown");
+                    $("#modalLocationAddress").text(location.address);
+                    $("#modalLocationCity").text(location.city);
+                    
+                    // Load reviews for this location
+                    const locationReviews = reviews.filter(r => r.locationId === locationId);
+                    let reviewsHtml = "";
+                    
+                    if (locationReviews.length === 0) {
+                        reviewsHtml = "<p>No reviews yet.</p>";
+                    } else {
+                        locationReviews.forEach(review => {
+                            const user = users.find(u => u.id === review.userId);
+                            
+                            reviewsHtml += `
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between">
+                                        <h6>${review.title}</h6>
+                                        <div class="rating">
+                                            ${Array(5).fill().map((_, i) => 
+                                                `<i class="bi bi-star${i < review.rating ? '-fill' : ''}"></i>`
+                                            ).join('')}
+                                        </div>
+                                    </div>
+                                    <p class="mb-1">${review.comment}</p>
+                                    <small class="text-muted">By ${user ? user.name : "Unknown User"}</small>
+                                </div>
+                            `;
+                        });
+                    }
+                    
+                    $("#locationReviews").html(reviewsHtml);
+                    
+                    // Show modal
+                    const modal = new bootstrap.Modal(document.getElementById('locationDetailsModal'));
+                    modal.show();
+                    
+                    // Set selected location for booking
+                    selectedLocation = location;
+                    $("#bookingLocationId").val(locationId);
+                    $("#reviewLocationId").val(locationId);
+                }
+            });
+            
+            // Book location button
+            $("#bookLocationBtn").click(function() {
+                // Close location details modal
+                const locationModal = bootstrap.Modal.getInstance(document.getElementById('locationDetailsModal'));
+                locationModal.hide();
+                
+                // Show booking modal
+                const bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
+                bookingModal.show();
+            });
+            
+            // Confirm booking
+            $("#confirmBookingBtn").click(function() {
+                const locationId = $("#bookingLocationId").val();
+                const date = $("#bookingDate").val();
+                const time = $("#bookingTime").val();
+                const duration = $("#bookingDuration").val();
+                const notes = $("#bookingNotes").val();
+                
+                // Create new booking
+                const newBooking = {
+                    id: bookings.length + 1,
+                    locationId: parseInt(locationId),
+                    userId: currentUser.id,
+                    date: date,
+                    time: time,
+                    duration: parseInt(duration),
+                    status: "pending",
+                    notes: notes
+                };
+                
+                bookings.push(newBooking);
+                
+                // Close modal
+                const bookingModal = bootstrap.Modal.getInstance(document.getElementById('bookingModal'));
+                bookingModal.hide();
+                
+                // Reset form
+                $("#bookingForm")[0].reset();
+                
+                // Show success message
+                alert("Booking confirmed! Your booking is pending approval.");
+                
+                // If on user dashboard, reload past bookings
+                if ($("#userDashboard").is(":visible")) {
+                    loadUserPastBookings();
+                }
+            });
+            
+            // Rating stars
+            $(document).on("click", ".rating-star", function() {
+                const rating = parseInt($(this).data("rating"));
+                selectedRating = rating;
+                
+                // Update star display
+                $(".rating-star").each(function(index) {
+                    if (index < rating) {
+                        $(this).removeClass("bi-star").addClass("bi-star-fill");
+                    } else {
+                        $(this).removeClass("bi-star-fill").addClass("bi-star");
+                    }
+                });
+            });
+            
+            // Submit review
+            $("#submitReviewBtn").click(function() {
+                const locationId = $("#reviewLocationId").val();
+                const title = $("#reviewTitle").val();
+                const comment = $("#reviewComment").val();
+                
+                if (selectedRating === 0) {
+                    alert("Please select a rating.");
+                    return;
+                }
+                
+                // Create new review
+                const newReview = {
+                    id: reviews.length + 1,
+                    locationId: parseInt(locationId),
+                    userId: currentUser.id,
+                    rating: selectedRating,
+                    title: title,
+                    comment: comment
+                };
+                
+                reviews.push(newReview);
+                
+                // Close modal
+                const reviewModal = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
+                reviewModal.hide();
+                
+                // Reset form
+                $("#reviewForm")[0].reset();
+                selectedRating = 0;
+                $(".rating-star").removeClass("bi-star-fill").addClass("bi-star");
+                
+                // Show success message
+                alert("Review submitted successfully!");
+                
+                // If on user dashboard, reload past reviews
+                if ($("#userDashboard").is(":visible")) {
+                    loadUserPastReviews();
+                }
+            });
+            
+            // Load user past bookings
+            function loadUserPastBookings() {
+                // Get user's bookings
+                const userBookings = bookings.filter(booking => booking.userId === currentUser.id);
+                
+                let html = "";
+                if (userBookings.length === 0) {
+                    html = `
+                        <div class="col-12">
+                            <div class="empty-state">
+                                <i class="bi bi-calendar-x"></i>
+                                <h4>No Past Bookings</h4>
+                                <p>You haven't made any bookings yet.</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    userBookings.forEach(booking => {
+                        const location = locations.find(loc => loc.id === booking.locationId);
+                        
+                        html += `
+                            <div class="col-md-6 mb-4">
+                                <div class="booking-card">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <h5>${location ? location.name : "Unknown Location"}</h5>
+                                        </div>
+                                        <span class="booking-status status-${booking.status}">${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}</span>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <p><i class="bi bi-calendar me-2"></i> ${booking.date}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><i class="bi bi-clock me-2"></i> ${booking.time}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><i class="bi bi-hourglass-split me-2"></i> ${booking.duration} hour${booking.duration !== 1 ? 's' : ''}</p>
+                                        </div>
+                                    </div>
+                                    ${booking.notes ? `<p><i class="bi bi-chat-quote me-2"></i> ${booking.notes}</p>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                $("#userPastBookingsList").html(html);
+            }
+            
+            // Load user past reviews
+            function loadUserPastReviews() {
+                // Get user's reviews
+                const userReviews = reviews.filter(review => review.userId === currentUser.id);
+                
+                let html = "";
+                if (userReviews.length === 0) {
+                    html = `
+                        <div class="col-12">
+                            <div class="empty-state">
+                                <i class="bi bi-star"></i>
+                                <h4>No Past Reviews</h4>
+                                <p>You haven't submitted any reviews yet.</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    userReviews.forEach(review => {
+                        const location = locations.find(loc => loc.id === review.locationId);
+                        
+                        html += `
+                            <div class="col-md-6 mb-4">
+                                <div class="review-card">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <h5>${review.title}</h5>
+                                        <div class="rating">
+                                            ${Array(5).fill().map((_, i) => 
+                                                `<i class="bi bi-star${i < review.rating ? '-fill' : ''}"></i>`
+                                            ).join('')}
+                                        </div>
+                                    </div>
+                                    <p class="mb-2">${review.comment}</p>
+                                    <p class="text-muted mb-0">For: ${location ? location.name : "Unknown Location"}</p>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+                
+                $("#userPastReviewsList").html(html);
+            }
+            
+            // Dashboard menu navigation
+            $(".menu-item").click(function() {
+                const section = $(this).data("section");
+                
+                // Update active menu item
+                $(this).siblings().removeClass("active");
+                $(this).addClass("active");
+                
+                // Show selected section
+                if (section === "logout") {
+                    logout();
+                } else if ($("#adminDashboard").is(":visible")) {
+                    // Admin dashboard sections
+                    $("#adminPlacesSection, #adminAddAllSection, #adminBalanceSection").addClass("hidden");
+                    
+                    switch(section) {
+                        case "places":
+                            $("#adminPlacesSection").removeClass("hidden");
+                            loadAdminCategories();
+                            break;
+                        case "addall":
+                            $("#adminAddAllSection").removeClass("hidden");
+                            break;
+                        case "balance":
+                            $("#adminBalanceSection").removeClass("hidden");
+                            break;
+                    }
+                } else if ($("#ownerDashboard").is(":visible")) {
+                    // Owner dashboard sections
+                    $("#ownerBookingsSection, #ownerPlacesSection, #ownerBalanceSection").addClass("hidden");
+                    
+                    switch(section) {
+                        case "bookings":
+                            $("#ownerBookingsSection").removeClass("hidden");
+                            break;
+                        case "places":
+                            $("#ownerPlacesSection").removeClass("hidden");
+                            loadOwnerCategories();
+                            break;
+                        case "balance":
+                            $("#ownerBalanceSection").removeClass("hidden");
+                            break;
+                    }
+                } else if ($("#userDashboard").is(":visible")) {
+                    // User dashboard sections
+                    $("#userPlacesSection, #userBookSection, #userPastBookingsSection, #userPastReviewsSection, #userBalanceSection").addClass("hidden");
+                    
+                    switch(section) {
+                        case "places":
+                            $("#userPlacesSection").removeClass("hidden");
+                            loadUserCategories();
+                            break;
+                        case "book":
+                            $("#userBookSection").removeClass("hidden");
+                            break;
+                        case "past-bookings":
+                            $("#userPastBookingsSection").removeClass("hidden");
+                            loadUserPastBookings();
+                            break;
+                        case "past-reviews":
+                            $("#userPastReviewsSection").removeClass("hidden");
+                            loadUserPastReviews();
+                            break;
+                        case "balance":
+                            $("#userBalanceSection").removeClass("hidden");
+                            break;
+                    }
+                }
+            });
+            
+            // Logout buttons
+            $("#adminLogout, #adminLogoutMenu").click(function() {
+                logout();
+            });
+            
+            $("#ownerLogout, #ownerLogoutMenu").click(function() {
+                logout();
+            });
+            
+            $("#userLogout, #userLogoutMenu").click(function() {
+                logout();
+            });
+            
+            // Logout function
+            function logout() {
+                currentUser = null;
+                showHomePage();
+                $(".user-only").removeClass("show");
+            }
+            
+            // Add all form
+            $("#addAllForm").submit(function(e) {
+                e.preventDefault();
+                
+                const categoryName = $("#addAllCategoryName").val();
+                const subcategoryName = $("#addAllSubcategoryName").val();
+                const ownerName = $("#addAllOwnerName").val();
+                const ownerEmail = $("#addAllOwnerEmail").val();
+                const ownerPhone = $("#addAllOwnerPhone").val();
+                const locationName = $("#addAllLocationName").val();
+                const locationAddress = $("#addAllLocationAddress").val();
+                const locationCity = $("#addAllLocationCity").val();
+                
+                // Add new category
+                const newCategory = {
+                    id: categories.length + 1,
+                    name: categoryName,
+                    image: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                };
+                categories.push(newCategory);
+                
+                // Add new subcategory
+                const newSubcategory = {
+                    id: subcategories.length + 1,
+                    name: subcategoryName,
+                    categoryId: newCategory.id
+                };
+                subcategories.push(newSubcategory);
+                
+                // Add new owner
+                const newOwner = {
+                    id: owners.length + 1,
+                    name: ownerName,
+                    email: ownerEmail,
+                    phone: ownerPhone
+                };
+                owners.push(newOwner);
+                
+                // Add new location
+                const newLocation = {
+                    id: locations.length + 1,
+                    name: locationName,
+                    ownerId: newOwner.id,
+                    categoryId: newCategory.id,
+                    subcategoryId: newSubcategory.id,
+                    address: locationAddress,
+                    city: locationCity
+                };
+                locations.push(newLocation);
+                
+                // Show success message
+                $("#addAllSuccess").removeClass("hidden");
+                
+                // Reset form
+                $("#addAllForm")[0].reset();
+                
+                // Reload admin categories
+                loadAdminCategories();
+            });
+        });
+    // Admin signup form
+$("#adminSignupForm").submit(async function(e) {
+    e.preventDefault();
+    
+    const adminData = {
+        username: $("#adminUsername").val(),
+        email: $("#adminEmail").val(),
+        mobile: $("#adminMobile").val(),
+        password: $("#adminPassword").val(),
+        adminSecret: $("#adminSecret").val()
+    };
+    
+    try {
+        const response = await fetch('http://localhost:5000/api/auth/register/admin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(adminData)
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            $("#adminSignupAlert").removeClass("hidden");
+            $("#adminSignupForm")[0].reset();
+            
+            // Switch to login tab after 2 seconds
+            setTimeout(() => {
+                $("#login-tab").click();
+                alert("Admin account created! You can now login.");
+            }, 2000);
+        } else {
+            alert(data.message || "Admin registration failed");
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Admin registration failed. Please check if backend is running.');
+    }
+});
+    </script>
+</body>
+</html>
