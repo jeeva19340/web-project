@@ -832,6 +832,9 @@
                         <button class="btn btn-outline-light btn-lg" id="homeSignupBtn">
                             <i class="bi bi-person-plus me-2"></i>Sign Up
                         </button>
+                         <button class="btn btn-outline-light btn-lg" id="homeAdminBtn">
+        <i class="bi bi-shield-lock me-2"></i>Admin
+    </button>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -1771,6 +1774,10 @@
                 showAuthSection();
                 $("#signup-tab").click();
             });
+            $("#homeAdminBtn").click(function() {
+    showAuthSection();
+    $("#admin-signup-tab").click();
+});
             
             $("#forgotPasswordLink").click(function(e) {
                 e.preventDefault();
