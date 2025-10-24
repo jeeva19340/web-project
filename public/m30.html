@@ -1126,12 +1126,12 @@
         <div class="location-input-section">
             <div class="location-input-header">
                 <h3><i class="bi bi-geo-alt me-2"></i>Select Your Location</h3>
-                <p>Tell us where you are to find the best locations near you</p>
+		<p>Choose your city to find the best locations near you</p>
             </div>
             
             <div class="location-input-group">
                 <div class="input-group">
-                    <input type="text" class="form-control form-control-lg" id="locationInput" placeholder="e.g., New York, London, Tokyo">
+                    <input type="text" class="form-control form-control-lg" id="locationInput" placeholder="Select: Sivakasi, Coimbatore, Madurai">
                     <button class="btn btn-primary btn-lg" type="button" id="useCurrentLocation">
                         <i class="bi bi-geo-alt"></i> Use Current Location
                     </button>
@@ -1482,12 +1482,12 @@
                             <div class="location-input-section">
                                 <div class="location-input-header">
                                     <h5>Find Places Near You</h5>
-                                    <p>Enter your location to discover amazing places nearby</p>
+                                    <p>Choose your city: Sivakasi ,Coimbatore, or Madurai</p>
                                 </div>
                                 
                                 <div class="location-input-group">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="userLocationInput" placeholder="e.g., New York, London, Tokyo">
+                                        <input type="text" class="form-control" id="userLocationInput" placeholder="Select: Sivakasi, Coimbatore, or Madurai">
                                         <button class="btn btn-primary" type="button" id="userUseCurrentLocation">
                                             <i class="bi bi-geo-alt"></i> Use Current Location
                                         </button>
@@ -1866,11 +1866,11 @@
             ];
             
             let locations = [
-                { id: 1, name: "FitZone Gym", ownerId: 1, categoryId: 1, subcategoryId: 1, address: "123/D-North Car Street", city: "Sivaksi" },
+                { id: 1, name: "FitZone Gym", ownerId: 1, categoryId: 1, subcategoryId: 1, address: "123/D-North Car Street", city: "Sivakasi" },
                 { id: 2, name: "PowerHouse Gym", ownerId: 2, categoryId: 1, subcategoryId: 2, address: "456/L-1,VSV Nagar", city: "Madurai" },
 		{ id: 3, name: "Fitness Zone", ownerId: 3, categoryId: 1, subcategoryId: 3, address: "6/409C1,Sivanantham Nagar ", city: "Coimbatore" },
 		{ id: 4, name: "24/7 Fitness Studio", ownerId: 2, categoryId: 1, subcategoryId: 4, address: "25-A,Mani Nagar ", city: "Coimbatore" },
-                { id: 5, name: "Bella Italia", ownerId: 3, categoryId: 1, subcategoryId: 5, address: "789 Pasta Blvd", city: "New York" },
+                { id: 5, name: "Bella Italia", ownerId: 3, categoryId: 1, subcategoryId: 5, address: "789 Pasta Blvd", city: "Coimbatore" },
 		{ id: 6, name: "IronFlex Gym", ownerId: 1, categoryId: 1, subcategoryId: 6, address: "12-B, Lakshmi Street", city: "Madurai" },
 		{ id: 7, name: "Muscle Factory", ownerId: 3, categoryId: 1, subcategoryId: 7, address: "98, Anna Nagar West", city: "Sivakasi" },
 		{ id: 8, name: "Body builder Paradise", ownerId: 2, categoryId: 1, subcategoryId: 8, address: "55, Gandhi Road", city: "Madurai" },
@@ -2378,9 +2378,11 @@ $("#signupForm").submit(async function(e) {
 });
             
             // Location input
-            $("#locationInput").on("input", function() {
-                const input = $(this).val().toLowerCase();
-                const suggestions = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"];
+	    // Location input
+$("#locationInput").on("input", function() {
+    const input = $(this).val().toLowerCase();
+    const suggestions = ["Sivakasi", "Coimbatore", "Madurai"];
+       
                 
                 const filtered = suggestions.filter(city => city.toLowerCase().includes(input));
                 
@@ -2662,63 +2664,114 @@ $("#signupForm").submit(async function(e) {
             }
             
             // Load user categories
-            function loadUserCategories() {
-                let html = "";
-                categories.forEach(category => {
-                    html += `
-                        <div class="col-md-4 mb-4">
-                            <div class="card category-card" data-id="${category.id}">
-                                <div class="position-relative">
-                                    <img src="${category.image}" class="card-img-top category-image" alt="${category.name}">
-                                    <span class="location-badge">${category.name}</span>
-                                </div>
-                                <div class="card-body">
-                                    <h5>${category.name}</h5>
-                                    <button class="btn btn-sm btn-primary view-category" data-id="${category.id}">View Places</button>
-                                </div>
-                            </div>
+            // Load user categories - filtered by location
+	    // Load user categories
+// Load user categories - filtered by location
+function loadUserCategories() {
+    const userLocation = currentUser.location;
+    
+    // Always show categories list and hide places list
+    $("#userCategoriesList").removeClass("hidden");
+
+    
+    // Filter locations by city and get unique categories
+    const cityLocations = locations.filter(loc => 
+        loc.city.toLowerCase() === userLocation.toLowerCase()
+    );
+    const categoryIds = [...new Set(cityLocations.map(loc => loc.categoryId))];
+    const filteredCategories = categories.filter(cat => categoryIds.includes(cat.id));
+    
+    let html = "";
+    if (filteredCategories.length === 0) {
+        html = `
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="bi bi-geo-alt"></i>
+                    <h4>No Categories Found</h4>
+                    <p>No places available in ${userLocation} at the moment.</p>
+                </div>
+            </div>
+        `;
+    } else {
+        filteredCategories.forEach(category => {
+            const categoryLocationCount = cityLocations.filter(loc => loc.categoryId === category.id).length;
+            html += `
+                <div class="col-md-4 mb-4">
+                    <div class="card category-card" data-id="${category.id}">
+                        <div class="position-relative">
+                            <img src="${category.image}" class="card-img-top category-image" alt="${category.name}">
+                            <span class="location-badge">${categoryLocationCount} places</span>
                         </div>
-                    `;
-                });
-                
-                $("#userCategoriesList").html(html);
-                $("#userPlacesList").addClass("hidden");
-            }
-            
+                        <div class="card-body">
+                            <h5>${category.name}</h5>
+                            <button class="btn btn-sm btn-primary view-category" data-id="${category.id}">View Places</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+    
+    $("#userCategoriesList").html(html);
+}
+
+
             // Load user places by category
-            function loadUserPlacesByCategory(categoryId) {
-                const category = categories.find(c => c.id === categoryId);
-                const categoryLocations = locations.filter(loc => loc.categoryId === categoryId);
-                
-                let html = "";
-                categoryLocations.forEach(loc => {
-                    const owner = owners.find(o => o.id === loc.ownerId);
-                    const subcategory = subcategories.find(s => s.id === loc.subcategoryId);
-                    
-                    html += `
-                        <div class="col-md-4 mb-4">
-                            <div class="card location-card" data-id="${loc.id}">
-                                <div class="position-relative">
-                                    <img src="https://images.unsplash.com/photo-1557682257-2f9c37a3a5f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top location-image" alt="${loc.name}">
-                                    <span class="location-badge">${subcategory ? subcategory.name : "Unknown"}</span>
-                                </div>
-                                <div class="card-body">
-                                    <h5>${loc.name}</h5>
-                                    <p class="text-muted">${owner ? owner.name : "Unknown"}</p>
-                                    <p><i class="bi bi-geo-alt me-2"></i>${loc.address}, ${loc.city}</p>
-                                    <button class="btn btn-sm btn-primary view-location" data-id="${loc.id}">View Details</button>
-                                </div>
-                            </div>
+            // Load user places by category - filtered by location
+function loadUserPlacesByCategory(categoryId) {
+    const userLocation = currentUser.location;
+    const category = categories.find(c => c.id === categoryId);
+    
+    // Filter by both category and city
+    const categoryLocations = locations.filter(loc => 
+        loc.categoryId === categoryId && 
+        loc.city.toLowerCase() === userLocation.toLowerCase()
+    );
+    
+    let html = "";
+    if (categoryLocations.length === 0) {
+        html = `
+            <div class="col-12">
+                <div class="empty-state">
+                    <i class="bi bi-geo-alt"></i>
+                    <h4>No Places Found</h4>
+                    <p>No ${category ? category.name : 'places'} available in ${userLocation}.</p>
+                    <button class="btn btn-primary mt-3" id="backToCategories">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Categories
+                    </button>
+                </div>
+            </div>
+        `;
+    } else {
+        categoryLocations.forEach(loc => {
+            const owner = owners.find(o => o.id === loc.ownerId);
+            const subcategory = subcategories.find(s => s.id === loc.subcategoryId);
+            
+            html += `
+                <div class="col-md-4 mb-4">
+                    <div class="card location-card" data-id="${loc.id}">
+                        <div class="position-relative">
+                            <img src="https://images.unsplash.com/photo-1557682257-2f9c37a3a5f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top location-image" alt="${loc.name}">
+                            <span class="location-badge">${subcategory ? subcategory.name : "Unknown"}</span>
                         </div>
-                    `;
-                });
-                
-                $("#userPlacesList").html(html);
-                $("#userCategoriesList").addClass("hidden");
-                $("#userPlacesList").removeClass("hidden");
-                
-                currentCategory = categoryId;
-            }
+                        <div class="card-body">
+                            <h5>${loc.name}</h5>
+                            <p class="text-muted">${owner ? owner.name : "Unknown"}</p>
+                            <p><i class="bi bi-geo-alt me-2"></i>${loc.address}, ${loc.city}</p>
+                            <button class="btn btn-sm btn-primary view-location" data-id="${loc.id}">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+    
+    $("#userPlacesList").html(html);
+    $("#userCategoriesList").addClass("hidden");
+    $("#userPlacesList").removeClass("hidden");
+    
+    currentCategory = categoryId;
+}
             
             // Load user balance
             function loadUserBalance() {
@@ -2726,10 +2779,11 @@ $("#signupForm").submit(async function(e) {
             }
             
             // User location input
-            $("#userLocationInput").on("input", function() {
-                const input = $(this).val().toLowerCase();
-                const suggestions = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"];
-                
+     	    // User location input
+$("#userLocationInput").on("input", function() {
+    const input = $(this).val().toLowerCase();
+    const suggestions = ["Sivakasi", "Coimbatore", "Madurai"];
+    
                 const filtered = suggestions.filter(city => city.toLowerCase().includes(input));
                 
                 let html = "";
@@ -2760,39 +2814,56 @@ $("#signupForm").submit(async function(e) {
             });
             
             // Find user places
-            $("#findUserPlaces").click(function() {
-                const location = $("#userLocationInput").val();
-                if (location) {
-                    currentUser.location = location;
-                    $("#userLocation").text(location);
-                    
-                    // Load places for the user
-                    let html = "";
-                    locations.forEach(loc => {
-                        const owner = owners.find(o => o.id === loc.ownerId);
-                        const category = categories.find(c => c.id === loc.categoryId);
-                        
-                        html += `
-                            <div class="col-md-4 mb-4">
-                                <div class="card location-card" data-id="${loc.id}">
-                                    <div class="position-relative">
-                                        <img src="https://images.unsplash.com/photo-1557682257-2f9c37a3a5f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top location-image" alt="${loc.name}">
-                                        <span class="location-badge">${category ? category.name : "Unknown"}</span>
-                                    </div>
-                                    <div class="card-body">
-                                        <h5>${loc.name}</h5>
-                                        <p class="text-muted">${owner ? owner.name : "Unknown"}</p>
-                                        <p><i class="bi bi-geo-alt me-2"></i>${loc.address}, ${loc.city}</p>
-                                        <button class="btn btn-sm btn-primary view-location" data-id="${loc.id}">View Details</button>
-                                    </div>
-                                </div>
+            // Find user places - filtered by location
+$("#findUserPlaces").click(function() {
+    const location = $("#userLocationInput").val();
+    if (location) {
+        currentUser.location = location;
+        $("#userLocation").text(location);
+        
+        // Load places filtered by the selected city
+        const cityLocations = locations.filter(loc => 
+            loc.city.toLowerCase() === location.toLowerCase()
+        );
+        
+        let html = "";
+        if (cityLocations.length === 0) {
+            html = `
+                <div class="col-12">
+                    <div class="empty-state">
+                        <i class="bi bi-geo-alt"></i>
+                        <h4>No Places Found</h4>
+                        <p>No places available in ${location} at the moment.</p>
+                    </div>
+                </div>
+            `;
+        } else {
+            cityLocations.forEach(loc => {
+                const owner = owners.find(o => o.id === loc.ownerId);
+                const category = categories.find(c => c.id === loc.categoryId);
+                
+                html += `
+                    <div class="col-md-4 mb-4">
+                        <div class="card location-card" data-id="${loc.id}">
+                            <div class="position-relative">
+                                <img src="https://images.unsplash.com/photo-1557682257-2f9c37a3a5f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top location-image" alt="${loc.name}">
+                                <span class="location-badge">${category ? category.name : "Unknown"}</span>
                             </div>
-                        `;
-                    });
-                    
-                    $("#userBookPlacesList").html(html);
-                }
+                            <div class="card-body">
+                                <h5>${loc.name}</h5>
+                                <p class="text-muted">${owner ? owner.name : "Unknown"}</p>
+                                <p><i class="bi bi-geo-alt me-2"></i>${loc.address}, ${loc.city}</p>
+                                <button class="btn btn-sm btn-primary view-location" data-id="${loc.id}">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
             });
+        }
+        
+        $("#userBookPlacesList").html(html);
+    }
+});
             
             // View category
             $(document).on("click", ".view-category", function() {
@@ -2806,6 +2877,17 @@ $("#signupForm").submit(async function(e) {
                     loadUserPlacesByCategory(categoryId);
                 }
             });
+	
+ 	    // Back to categories button
+$(document).on("click", "#backToCategories", function() {
+    if ($("#adminDashboard").is(":visible")) {
+        loadAdminCategories();
+    } else if ($("#ownerDashboard").is(":visible")) {
+        loadOwnerCategories();
+    } else if ($("#userDashboard").is(":visible")) {
+        loadUserCategories();
+    }
+});
             
             // View location details
             $(document).on("click", ".view-location", function() {
