@@ -2959,43 +2959,75 @@ $(document).on("click", "#backToCategories", function() {
             });
             
             // Confirm booking
-            $("#confirmBookingBtn").click(function() {
-                const locationId = $("#bookingLocationId").val();
-                const date = $("#bookingDate").val();
-                const time = $("#bookingTime").val();
-                const duration = $("#bookingDuration").val();
-                const notes = $("#bookingNotes").val();
-                
-                // Create new booking
-                const newBooking = {
-                    id: bookings.length + 1,
-                    locationId: parseInt(locationId),
-                    userId: currentUser.id,
-                    date: date,
-                    time: time,
-                    duration: parseInt(duration),
-                    status: "pending",
-                    notes: notes
-                };
-                
-                bookings.push(newBooking);
-                
-                // Close modal
-                const bookingModal = bootstrap.Modal.getInstance(document.getElementById('bookingModal'));
-                bookingModal.hide();
-                
-                // Reset form
-                $("#bookingForm")[0].reset();
-                
-                // Show success message
-                alert("Booking confirmed! Your booking is pending approval.");
-                
-                // If on user dashboard, reload past bookings
-                if ($("#userDashboard").is(":visible")) {
-                    loadUserPastBookings();
-                }
-            });
+            // Confirm booking - UPDATED TO SAVE TO MONGODB
+
+	    // Confirm booking - UPDATED WITH BETTER ERROR HANDLING
+$("#confirmBookingBtn").click(async function() {
+    const locationId = $("#bookingLocationId").val();
+    const date = $("#bookingDate").val();
+    const time = $("#bookingTime").val();
+    const duration = $("#bookingDuration").val();
+    const notes = $("#bookingNotes").val();
+    
+    console.log('Booking data:', { locationId, date, time, duration, notes }); // Debug log
+    
+    // Validate required fields
+    if (!date || !time || !duration) {
+        alert("Please fill in all required fields");
+        return;
+    }
+    
+    // Create booking data
+    const bookingData = {
+        locationId: locationId.toString(),
+        userId: currentUser.id ? currentUser.id.toString() : currentUser._id.toString(),
+        date: date,
+        time: time,
+        duration: parseInt(duration),
+        status: "pending",
+        notes: notes || ""
+    };
+    
+    console.log('Sending booking data:', bookingData); // Debug log
+    
+    try {
+        // Save to MongoDB via API
+        const response = await fetch('http://localhost:5000/api/bookings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bookingData)
+        });
+        
+        const data = await response.json();
+        console.log('Response:', response.status, data); // Debug log
+        
+        if (response.ok) {
+            // Close modal
+            const bookingModal = bootstrap.Modal.getInstance(document.getElementById('bookingModal'));
+            bookingModal.hide();
             
+            // Reset form
+            $("#bookingForm")[0].reset();
+            
+            // Show success message
+            alert("Booking confirmed! Your booking has been saved and is pending approval.");
+            
+            // Reload past bookings if on that section
+            if ($("#userDashboard").is(":visible")) {
+                loadUserPastBookings();
+            }
+        } else {
+            console.error('Booking failed:', data);
+            alert("Failed to create booking: " + (data.message || data.error || "Unknown error"));
+        }
+    } catch (error) {
+        console.error('Booking error:', error);
+        alert('Failed to create booking. Error: ' + error.message + '\n\nPlease check:\n1. Backend server is running on port 5000\n2. MongoDB is running\n3. Check browser console for details');
+    }
+});
+		            
             // Rating stars
             $(document).on("click", ".rating-star", function() {
                 const rating = parseInt($(this).data("rating"));
@@ -3053,56 +3085,81 @@ $(document).on("click", "#backToCategories", function() {
             });
             
             // Load user past bookings
-            function loadUserPastBookings() {
-                // Get user's bookings
-                const userBookings = bookings.filter(booking => booking.userId === currentUser.id);
-                
-                let html = "";
-                if (userBookings.length === 0) {
-                    html = `
-                        <div class="col-12">
-                            <div class="empty-state">
-                                <i class="bi bi-calendar-x"></i>
-                                <h4>No Past Bookings</h4>
-                                <p>You haven't made any bookings yet.</p>
+            // Load user past bookings - UPDATED TO FETCH FROM MONGODB
+async function loadUserPastBookings() {
+    try {
+        // Fetch from MongoDB
+        const response = await fetch('http://localhost:5000/api/bookings', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        if (response.ok) {
+            const allBookings = await response.json();
+            
+            // Filter user's bookings
+            const userBookings = allBookings.filter(booking => 
+                booking.userId === currentUser.id
+            );
+            
+            let html = "";
+            if (userBookings.length === 0) {
+                html = `
+                    <div class="col-12">
+                        <div class="empty-state">
+                            <i class="bi bi-calendar-x"></i>
+                            <h4>No Past Bookings</h4>
+                            <p>You haven't made any bookings yet.</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                userBookings.forEach(booking => {
+                    const location = locations.find(loc => loc.id === parseInt(booking.locationId));
+                    
+                    html += `
+                        <div class="col-md-6 mb-4">
+                            <div class="booking-card">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h5>${location ? location.name : "Unknown Location"}</h5>
+                                    </div>
+                                    <span class="booking-status status-${booking.status}">${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}</span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><i class="bi bi-calendar me-2"></i> ${booking.date}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><i class="bi bi-clock me-2"></i> ${booking.time}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><i class="bi bi-hourglass-split me-2"></i> ${booking.duration} hour${booking.duration !== 1 ? 's' : ''}</p>
+                                    </div>
+                                </div>
+                                ${booking.notes ? `<p><i class="bi bi-chat-quote me-2"></i> ${booking.notes}</p>` : ''}
                             </div>
                         </div>
                     `;
-                } else {
-                    userBookings.forEach(booking => {
-                        const location = locations.find(loc => loc.id === booking.locationId);
-                        
-                        html += `
-                            <div class="col-md-6 mb-4">
-                                <div class="booking-card">
-                                    <div class="d-flex justify-content-between align-items-start mb-3">
-                                        <div>
-                                            <h5>${location ? location.name : "Unknown Location"}</h5>
-                                        </div>
-                                        <span class="booking-status status-${booking.status}">${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}</span>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <p><i class="bi bi-calendar me-2"></i> ${booking.date}</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p><i class="bi bi-clock me-2"></i> ${booking.time}</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p><i class="bi bi-hourglass-split me-2"></i> ${booking.duration} hour${booking.duration !== 1 ? 's' : ''}</p>
-                                        </div>
-                                    </div>
-                                    ${booking.notes ? `<p><i class="bi bi-chat-quote me-2"></i> ${booking.notes}</p>` : ''}
-                                </div>
-                            </div>
-                        `;
-                    });
-                }
-                
-                $("#userPastBookingsList").html(html);
+                });
             }
             
-            // Load user past reviews
+            $("#userPastBookingsList").html(html);
+        }
+    } catch (error) {
+        console.error('Error loading bookings:', error);
+        $("#userPastBookingsList").html(`
+            <div class="col-12">
+                <div class="alert alert-danger">
+                    Failed to load bookings. Please make sure the server is running.
+                </div>
+            </div>
+        `);
+    }
+}
+		
+                       // Load user past reviews
             function loadUserPastReviews() {
                 // Get user's reviews
                 const userReviews = reviews.filter(review => review.userId === currentUser.id);
